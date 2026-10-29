@@ -11,7 +11,7 @@ Form: https://courses.datatalks.club/ml-zoomcamp-2026/homework/hw05
 | 3 | Conversion probability (loaded model) | `0.533` | [q3_load_model.py](q3_load_model.py) → 0.532994 |
 | 4 | Conversion probability (API) | `0.770` | [results/q4_api_response.json](results/q4_api_response.json) → 0.769799 |
 | 5 | Python base image | `python:3.11.15-slim-bookworm` | [q5_dockerfile_base.py](q5_dockerfile_base.py) |
-| 6 | Conversion probability (container) | `0.770` | [results/q6_container_response.json](results/q6_container_response.json) |
+| 6 | Conversion probability (container) | `0.770` | [results/q6_container_response.json](results/q6_container_response.json) → 0.769799 ([Actions run](https://github.com/devotuoma/machine-learning-zoomcamp/actions/runs/40842296937)) |
 
 ## Submission details
 
