@@ -1,0 +1,8 @@
+{
+  "q1_uv_version": "0.13.6",
+  "q2_scikit_learn": "1.7.2",
+  "q3_probability": 0.533,
+  "q4_probability": 0.77,
+  "q5_base_image": "python:3.11.15-slim-bookworm",
+  "q6_probability": 0.77
+}
