@@ -37,6 +37,19 @@ python3 solution/q4_client.py         # terminal 2
 uv run --locked --with pytest pytest solution/tests -q
 ```
 
+## Answers
+
+| # | Question | Answer | Evidence |
+|---|---|---|---|
+| 1 | uv version | **0.13.6** | local `uv --version` (not graded; the image uses 0.10.11) |
+| 2 | Scikit-Learn version | **1.7.2** | `uv.lock` and `pyproject.toml` |
+| 3 | Probability, loaded model | **0.533** | 0.532994 from `pickle.load` + `predict_proba` |
+| 4 | Probability, API | **0.770** | 0.769799 from uvicorn ([response](results/q4_api_response.json)) |
+| 5 | Python base image | **python:3.11.15-slim-bookworm** | Dockerfile `FROM` line, pinned by digest |
+| 6 | Probability, container | **0.770** | 0.769799 from `zoomcamp-model:2026-hw5` ([response](results/q6_container_response.json)) |
+
+Q6 ran in Docker on GitHub Actions ([workflow](../../../../../.github/workflows/hw05-container.yml), [run](https://github.com/devotuoma/machine-learning-zoomcamp/actions/runs/40842296937)), because Docker wasn't available on my laptop. The workflow builds the course Dockerfile unchanged, runs the container and queries it with both [q4_client.py](q4_client.py) and the course's `q6_test.py`. Inside the container: Python 3.11.15, scikit-learn 1.7.2, `/health` reports model checksum `1646bbdc…`.
+
 ## What I found beyond the answers
 
 ### 1. Why 0.533? Opening up the prediction
