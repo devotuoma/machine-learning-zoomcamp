@@ -1,0 +1,51 @@
+name: Homework 5 container (Q6)
+
+on:
+  push:
+    branches:
+      - hw05-deployment
+    paths:
+      - cohorts/2026/homework/05-deployment/**
+      - .github/workflows/hw05-container.yml
+
+permissions:
+  contents: read
+
+jobs:
+  q6-container:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: cohorts/2026/homework/05-deployment
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Verify frozen artifact
+        run: |
+          sha256sum pipeline.bin
+          python3 solution/verify_artifact.py
+
+      - name: Build the canonical image
+        run: |
+          docker build -t zoomcamp-model:2026-hw5 .
+          docker image inspect zoomcamp-model:2026-hw5 --format 'image size: {{.Size}} bytes (not graded)'
+          docker version --format 'docker {{.Server.Version}}'
+
+      - name: Run the container
+        run: docker run -d --name hw5 -p 9696:9696 zoomcamp-model:2026-hw5
+
+      - name: Q6 - query the container
+        run: |
+          python3 solution/q4_client.py http://localhost:9696 --save solution/results/q6_container_response.json
+          python3 q6_test.py
+          docker exec hw5 python -c "import sklearn, sys; print('container: python', sys.version.split()[0], 'scikit-learn', sklearn.__version__)"
+
+      - name: Container logs
+        if: always()
+        run: docker logs hw5
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: q6-container-response
+          path: cohorts/2026/homework/05-deployment/solution/results/q6_container_response.json
