@@ -16,8 +16,9 @@ Solution for [Homework 5](../homework.md) of ML Zoomcamp 2026. We take the froze
 | [explain_prediction.py](explain_prediction.py) | Splits a prediction into per-feature log-odds contributions |
 | [income_sensitivity.py](income_sensitivity.py) | What-if: same lead, income from 0 to 200k |
 | [edge_cases.py](edge_cases.py) | Sends typos, unseen categories and bad numbers to the API |
+| [predict_validated.py](predict_validated.py) | Stricter `/predict` that validates values, not just types |
 | [solve_all.py](solve_all.py) | Writes every answer to [results/answers.json](results/answers.json) |
-| [tests/](tests/) | 13 pytest checks, including a live uvicorn server |
+| [tests/](tests/) | 23 pytest checks against live uvicorn servers |
 | [Makefile](Makefile) | `make q3`, `make serve`, `make q4`, `make q6`, `make test`, … |
 | [deliverables/](deliverables/) | Learning-in-public posts and FAQ proposal |
 
@@ -76,7 +77,17 @@ The decision flips to "won't convert" at about 90k, although in the data convert
 | `number_of_courses_viewed: 2.5` | **422** | — |
 | `{}` (empty body) | 200 | 0.610 |
 
-`DictVectorizer` silently drops category values it didn't see in training, so `"Paid_Ads"` and `"tiktok"` both become an all-zero `lead_source` block and get the same score. Pydantic validates **types**, not **values**: a string that parses as a number is fine, and a negative count or absurd income is fine. Only a fractional integer is rejected. For a real service I'd add `Literal[...]` types for the categories and `Field(ge=0)` bounds on the numbers.
+`DictVectorizer` silently drops category values it didn't see in training, so `"Paid_Ads"` and `"tiktok"` both become an all-zero `lead_source` block and get the same score. Pydantic validates **types**, not **values**: a string that parses as a number is fine, and a negative count or absurd income is fine. Only a fractional integer is rejected. [predict_validated.py](predict_validated.py) fixes this without touching the frozen pipeline:
+
+```python
+StrictLead = create_model("StrictLead", __base__=_Numbers,
+    **{f: (Optional[Literal[vocabulary(f)]], None) for f in CATEGORICAL_FEATURES})
+# vocabulary() reads the allowed values from the DictVectorizer itself
+```
+
+- `"Paid_Ads"`, `"North America"` → normalised, same 0.533 as the clean lead
+- `"tiktok"`, `-3` interactions, `7927600` income, `lead_score: 4.1`, misspelled field names → **422**
+- income of 250,000 → a prediction plus `"warnings": ["annual_income=250000.0 is outside the training range …"]`
 
 ### 4. Same answer everywhere
 
