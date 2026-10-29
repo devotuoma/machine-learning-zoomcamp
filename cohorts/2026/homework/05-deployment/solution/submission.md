@@ -19,4 +19,4 @@ Form: https://courses.datatalks.club/ml-zoomcamp-2026/homework/hw05
 |---|---|
 | Homework URL | https://github.com/devotuoma/machine-learning-zoomcamp/tree/hw05-deployment/cohorts/2026/homework/05-deployment/solution |
 | Learning in public links | Your LinkedIn, X, Instagram and Medium post URLs once published (texts in [deliverables/](deliverables/)) |
-| FAQ contribution | Pull request fixing DataTalksClub/machine-learning-zoomcamp#745 |
+| FAQ contribution | https://github.com/DataTalksClub/faq/issues/523 (also solved course issue #745: https://github.com/DataTalksClub/machine-learning-zoomcamp/pull/749) |
